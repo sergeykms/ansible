@@ -1,5 +1,15 @@
-- hosts: all
+- hosts: cloud
+
   tasks:
-     - ansible.builtin.file:
-         name: /tmp/ansible_was_here
-         state: touch
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes # <---
+
+    # - name: remove git
+    #   ansible.builtin.apt:
+    #     name: git
+    #     state: absent
+    #   become: yes # <---
