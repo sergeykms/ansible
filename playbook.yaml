@@ -1,4 +1,7 @@
 - hosts: cloud
+  vars:
+    root_dir: /etc/nginx
+    nginx_port: 8080
 
   tasks:
     - name: install nginx
@@ -13,9 +16,18 @@
         dest: /usr/share/nginx/html/index.html
       become: yes 
 
-    - name: copy file
-      ansible.builtin.copy:
-        src: files/nginx.conf
+
+    # - name: copy nginix config
+    #   ansible.builtin.copy:
+    #     src: files/nginx.conf
+    #     dest: /etc/nginx/nginx.conf
+    #   notify:
+    #     - restart nginx
+    #   become: yes 
+
+    - name: update nginix config
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
       notify:
         - restart nginx
