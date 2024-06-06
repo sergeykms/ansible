@@ -1,12 +1,50 @@
 - hosts: cloud
 
   tasks:
+
+    - name: Update apt-get repo and cache
+      ansible.builtin.apt: update_cache=yes
+      become: yes # <---
+
     - name: install git
       ansible.builtin.apt:
         name: git
         state: present
         update_cache: yes
-      become: yes # <---
+      become: yes
+      tags: update
+
+    - name: install nginx
+      ansible.builtin.apt:
+        name: make
+        state: present
+      become: yes
+
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+      become: yes
+
+    - name: Add the user 'arya'
+      ansible.builtin.user:
+        name: arya
+      become: yes
+      tags: users
+
+    - name: Add the user 'sansa'
+      ansible.builtin.user:
+        name: sansa
+      become: yes
+      tags: users
+
+
+    - name: Add the user 'tirion'
+      ansible.builtin.user:
+        name: tirion
+      become: yes
+      tags: users
+
 
     # - name: remove git
     #   ansible.builtin.apt:

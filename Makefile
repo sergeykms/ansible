@@ -3,3 +3,6 @@ run-playbook:
 
 ping:
 	ansible all -i inventory.ini -m ping
+
+check:
+	ansible-playbook --check playbook.yaml -i inventory.ini 
