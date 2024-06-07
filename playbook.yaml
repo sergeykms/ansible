@@ -1,21 +1,57 @@
 - hosts: cloud
+  gather_facts: no
+
   vars:
-    root_dir: /etc/nginx
-    nginx_port: 8080
+    user: ["testuser1", "testuser2", "testuser3"]
+
+  # vars:
+  #   root_dir: /etc/nginx
+  #   nginx_port: 80
 
   tasks:
-    - name: install nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: latest
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: "/tmp/{{ item }}"
+        state: directory
+        mode: 777
       become: yes
+      loop: "{{ user }}"
 
-    - name: copy file
-      ansible.builtin.copy:
-        src: files/index.html
-        dest: /usr/share/nginx/html/index.html
-      become: yes 
+    - name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+      ansible.builtin.file:
+        path: "/tmp/{{ item }}/{{ item }}.cfg"
+        state: touch
+        mode: 777
+      become: yes
+      loop: "{{ user }}"
 
+
+    # - name: install git
+    #   ansible.builtin.apt:
+    #     name: git
+    #     state: present
+    #     update_cache: yes
+    #   become: yes
+    #   tags: update
+
+  #   - name: install nginx
+  #     ansible.builtin.apt:
+  #       name: nginx
+  #       state: latest
+  #     become: yes
+
+  #   - name: update template file
+  #     ansible.builtin.template:
+  #       src: templates/index.html
+  #       dest: /usr/share/nginx/html/index.html
+  #     become: yes 
+
+    # - name: copy file
+    #   ansible.builtin.copy:
+    #     src: files/index.html
+    #     dest: /usr/share/nginx/html/index.html
+    #   become: yes 
 
     # - name: copy nginix config
     #   ansible.builtin.copy:
@@ -25,32 +61,24 @@
     #     - restart nginx
     #   become: yes 
 
-    - name: update nginix config
-      ansible.builtin.template:
-        src: templates/nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-      notify:
-        - restart nginx
-      become: yes 
+  #   - name: update nginix config
+  #     ansible.builtin.template:
+  #       src: templates/nginx.conf.j2
+  #       dest: /etc/nginx/nginx.conf
+  #     notify:
+  #       - restart nginx
+  #     become: yes 
 
-  handlers:
-    - name: restart nginx
-      ansible.builtin.service:
-        name: nginx
-        state: reloaded
-      become: yes
+  # handlers:
+  #   - name: restart nginx
+  #     ansible.builtin.service:
+  #       name: nginx
+  #       state: reloaded
+  #     become: yes
 
     # - name: Update apt-get repo and cache
     #   ansible.builtin.apt: update_cache=yes
     #   become: yes # <---
-
-    # - name: install git
-    #   ansible.builtin.apt:
-    #     name: git
-    #     state: present
-    #     update_cache: yes
-    #   become: yes
-    #   tags: update
 
     # - name: install nginx
     #   ansible.builtin.apt:
