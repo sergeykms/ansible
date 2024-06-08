@@ -6,3 +6,6 @@ ping:
 
 check:
 	ansible-playbook --check playbook.yaml -i inventory.ini 
+
+facts:
+	ansible hosts -i inventory.ini -m setup | less

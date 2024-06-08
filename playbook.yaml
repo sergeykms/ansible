@@ -1,30 +1,31 @@
 - hosts: cloud
-  gather_facts: no
-
-  vars:
-    user: ["testuser1", "testuser2", "testuser3"]
+  # gather_facts: no
 
   # vars:
-  #   root_dir: /etc/nginx
-  #   nginx_port: 80
+  #   user: ["testuser1", "testuser2", "testuser3"]
+
+  vars:
+    os_name: "{{ ansible_distribution | upper }}"
+    server_date: "{{ ansible_date_time.date }}"
+
 
   tasks:
 
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: "/tmp/{{ item }}"
-        state: directory
-        mode: 777
-      become: yes
-      loop: "{{ user }}"
+    # - name: Create a directory if it does not exist
+    #   ansible.builtin.file:
+    #     path: "/tmp/{{ item }}"
+    #     state: directory
+    #     mode: 777
+    #   become: yes
+    #   loop: "{{ user }}"
 
-    - name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
-      ansible.builtin.file:
-        path: "/tmp/{{ item }}/{{ item }}.cfg"
-        state: touch
-        mode: 777
-      become: yes
-      loop: "{{ user }}"
+    # - name: Touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+    #   ansible.builtin.file:
+    #     path: "/tmp/{{ item }}/{{ item }}.cfg"
+    #     state: touch
+    #     mode: 777
+    #   become: yes
+    #   loop: "{{ user }}"
 
 
     # - name: install git
@@ -41,11 +42,11 @@
   #       state: latest
   #     become: yes
 
-  #   - name: update template file
-  #     ansible.builtin.template:
-  #       src: templates/index.html
-  #       dest: /usr/share/nginx/html/index.html
-  #     become: yes 
+    - name: update template file
+      ansible.builtin.template:
+        src: templates/index.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes 
 
     # - name: copy file
     #   ansible.builtin.copy:
