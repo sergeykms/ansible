@@ -1,15 +1,21 @@
 - hosts: cloud
+  roles:
+    - role: users
+      vars:
+        users_user: 
+         ["tmpuser1", "tmpuser2"]
+
   # gather_facts: no
 
   # vars:
   #   user: ["testuser1", "testuser2", "testuser3"]
 
-  vars:
-    os_name: "{{ ansible_distribution | upper }}"
-    server_date: "{{ ansible_date_time.date }}"
+  # vars:
+  #   os_name: "{{ ansible_distribution | upper }}"
+  #   server_date: "{{ ansible_date_time.date }}"
 
 
-  tasks:
+  # tasks:
 
     # - name: Create a directory if it does not exist
     #   ansible.builtin.file:
@@ -28,7 +34,14 @@
     #   loop: "{{ user }}"
 
 
-    # - name: install git
+    # - name: install cowsay
+    #   ansible.builtin.apt:
+    #     name: cowsay
+    #     state: present
+    #     update_cache: yes
+    #   become: yes
+
+        # - name: install git
     #   ansible.builtin.apt:
     #     name: git
     #     state: present
@@ -42,11 +55,14 @@
   #       state: latest
   #     become: yes
 
-    - name: update template file
-      ansible.builtin.template:
-        src: templates/index.html
-        dest: /usr/share/nginx/html/index.html
-      become: yes 
+    # - ansible.builtin.shell: cowsay "This is server server_name!"
+    #   register: cowsay_result
+
+    # - name: update template file
+    #   ansible.builtin.template:
+    #     src: templates/index.html
+    #     dest: /usr/share/nginx/html/index.html
+    #   become: yes 
 
     # - name: copy file
     #   ansible.builtin.copy:
